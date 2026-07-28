@@ -27,18 +27,15 @@ jobs:
       - name: Instalar dependencias
         run: pip install -r requirements.txt
 
-      - name: Correr script de actualización
+      - name: Configurar identidad de git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Correr script de actualización (incluye commit + push)
         env:
           SP_TENANT_ID: ${{ secrets.SP_TENANT_ID }}
           SP_CLIENT_ID: ${{ secrets.SP_CLIENT_ID }}
           SP_CLIENT_SECRET: ${{ secrets.SP_CLIENT_SECRET }}
           SP_FILE_URL: ${{ secrets.SP_FILE_URL }}
         run: python actualizar_panel_v2.py
-
-      - name: Commit y push del index.html actualizado
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add index.html
-          git diff --cached --quiet && echo "Sin cambios que subir." || git commit -m "Actualizacion automatica panel $(date -u '+%Y-%m-%d %H:%M UTC')"
-          git push
