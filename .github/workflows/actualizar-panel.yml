@@ -1,0 +1,44 @@
+name: Actualizar Panel de Licitaciones
+
+on:
+  schedule:
+    # 11:00 UTC = 07:00 Chile en horario de invierno (UTC-4).
+    # Chile usa horario de verano (UTC-3) ~sept a abril: en esas fechas
+    # esto corre a las 08:00 Chile en vez de 07:00. Ajustar manualmente
+    # si se necesita precisión exacta todo el año.
+    - cron: "0 11 * * *"
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+jobs:
+  actualizar:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout del repo
+        uses: actions/checkout@v4
+
+      - name: Configurar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Instalar dependencias
+        run: pip install -r requirements.txt
+
+      - name: Correr script de actualización
+        env:
+          SP_TENANT_ID: ${{ secrets.SP_TENANT_ID }}
+          SP_CLIENT_ID: ${{ secrets.SP_CLIENT_ID }}
+          SP_CLIENT_SECRET: ${{ secrets.SP_CLIENT_SECRET }}
+          SP_FILE_URL: ${{ secrets.SP_FILE_URL }}
+        run: python actualizar_panel_v2.py
+
+      - name: Commit y push del index.html actualizado
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          git diff --cached --quiet && echo "Sin cambios que subir." || git commit -m "Actualizacion automatica panel $(date -u '+%Y-%m-%d %H:%M UTC')"
+          git push
