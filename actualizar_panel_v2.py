@@ -36,6 +36,7 @@ import msal
 from io import BytesIO
 from datetime import datetime, timedelta
 from pathlib import Path
+from zoneinfo import ZoneInfo
 
 # =========================================================
 # CONFIGURACIÓN
@@ -90,6 +91,16 @@ SEGUNDOS_ISOTIPO = 5
 
 INTENTOS_LECTURA_EXCEL = 3
 ESPERA_ENTRE_INTENTOS_SEG = 5
+
+ZONA_CHILE = ZoneInfo("America/Santiago")
+
+
+def ahora_chile():
+    """Hora actual en Chile (naive, sin tzinfo) para que se pueda comparar
+    directamente con las fechas del Excel, que tampoco tienen tzinfo.
+    El runner de GitHub Actions corre en UTC, por eso no alcanza con
+    datetime.now()."""
+    return datetime.now(ZONA_CHILE).replace(tzinfo=None)
 
 
 def normalizar(valor):
@@ -182,7 +193,7 @@ def leer_y_cruzar_licitaciones():
                 print(f"Detalle: {e}")
                 sys.exit(1)
 
-    ahora = datetime.now()
+    ahora = ahora_chile()
     limite = ahora + timedelta(days=DIAS_VENTANA)
 
     # Filtro principal sobre PPublicas
@@ -264,7 +275,7 @@ def generar_html(confirmadas, sin_confirmar):
     datos = {
         "confirmadas": confirmadas,
         "sin_confirmar": sin_confirmar,
-        "generado": datetime.now().strftime("%Y-%m-%d %H:%M"),
+        "generado": ahora_chile().strftime("%Y-%m-%d %H:%M"),
     }
     datos_json = json.dumps(datos, ensure_ascii=False)
 
@@ -298,7 +309,7 @@ def subir_a_github():
 
     print("Subiendo cambios a GitHub...")
     correr("git add index.html")
-    mensaje = f"Actualizacion panel {datetime.now().strftime('%Y-%m-%d %H:%M')}"
+    mensaje = f"Actualizacion panel {ahora_chile().strftime('%Y-%m-%d %H:%M')}"
     codigo = correr(f'git commit -m "{mensaje}"')
     if codigo != 0:
         print("Nota: puede que no haya cambios nuevos que subir (esto no es un error).")
