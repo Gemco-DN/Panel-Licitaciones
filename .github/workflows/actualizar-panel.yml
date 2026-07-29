@@ -7,9 +7,9 @@ on:
     # esto corre a las 08:00 Chile en vez de 07:00. Ajustar manualmente
     # si se necesita precisión exacta todo el año.
     - cron: "0 11 * * *"
-    # TEMPORAL - prueba unica 2026-07-29 18:20 Chile (22:20 UTC), para verificar
+    # TEMPORAL - prueba unica 2026-07-29 19:30 Chile (23:30 UTC), para verificar
     # que el disparo automatico por cron funciona. Quitar despues de confirmar.
-    - cron: "20 22 * * *"
+    - cron: "30 23 * * *"
   workflow_dispatch: {}
 
 permissions:
