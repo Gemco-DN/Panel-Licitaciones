@@ -2,14 +2,17 @@ name: Actualizar Panel de Licitaciones
 
 on:
   schedule:
-    # 11:00 UTC = 07:00 Chile en horario de invierno (UTC-4).
+    # 08:00 UTC = 04:00 Chile en horario de invierno (UTC-4).
     # Chile usa horario de verano (UTC-3) ~sept a abril: en esas fechas
-    # esto corre a las 08:00 Chile en vez de 07:00. Ajustar manualmente
+    # esto corre a las 05:00 Chile en vez de 04:00. Ajustar manualmente
     # si se necesita precisión exacta todo el año.
-    - cron: "0 11 * * *"
-    # TEMPORAL - prueba unica 2026-07-29 19:30 Chile (23:30 UTC), para verificar
-    # que el disparo automatico por cron funciona. Quitar despues de confirmar.
-    - cron: "30 23 * * *"
+    #
+    # Se adelantó de 07:00 a 04:00 Chile a propósito: el trigger "schedule"
+    # de GitHub Actions no garantiza horario exacto y se ha visto atrasarse
+    # varias horas (confirmado: una corrida programada para las 07:00 corrió
+    # recién a las 12:12). Con 4-5 horas de margen antes de las 09:00, hay
+    # más chance de que ya haya corrido cuando alguien lo necesite.
+    - cron: "0 8 * * *"
   workflow_dispatch: {}
 
 permissions:
