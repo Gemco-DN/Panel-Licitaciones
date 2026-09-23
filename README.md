@@ -2,7 +2,9 @@
 
 Panel TV de licitaciones próximas a cerrar, con datos leídos desde SharePoint (Excel) vía Microsoft Graph API y publicado en GitHub Pages. Se actualiza solo, todos los días, vía GitHub Actions.
 
-URL pública: https://mguajardoe-cyber.github.io/panel-licitaciones/
+URL pública: https://gemco-dn.github.io/Panel-Licitaciones/
+
+> La URL antigua (`mguajardoe-cyber.github.io/panel-licitaciones`) quedó congelada en datos del 2026-07-23 tras mover el repo a la organización `Gemco-DN`. No usarla.
 
 Detalle completo de arquitectura, datos y decisiones de diseño en [CONTEXTO_PROYECTO.md](CONTEXTO_PROYECTO.md).
 
